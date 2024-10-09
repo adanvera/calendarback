@@ -1,19 +1,61 @@
 
 
 const { response } = require('express');
-const { validarCampos } = require('../middlewares/validatos');
 const Usuario = require('../models/Usuario');
 const bcrypt = require('bcryptjs');
 const logger = require('../helpers/logger');
-const { log } = require('winston');
+const { generarJWT } = require('../helpers/tokens');
 
 const login = async (req, res = response) => {
     const { email, password } = req.body;
-    validarCampos
-    res.json({
-        ok: true,
-        msg: 'login'
-    });
+    logger.info('Inicio de la función -> login()')
+
+    try {
+        let usuario = await Usuario.findOne({ email });
+
+        if (!usuario) {
+            logger.error(`El usuario con email: ${email} no existe`)
+            return res.status(400).json({
+                ok: false,
+                msg: 'El usuario no existe con ese email'
+            });
+        }
+
+        // Confirmar los passwords
+        const validPassword = bcrypt.compareSync(password, usuario.password);
+
+        if (!validPassword) {
+            logger.error(`Contraseña incorrecta para el usuario con email: ${email}`)
+            return res.status(400).json({
+                ok: false,
+                msg: 'Password incorrecto'
+            });
+        }
+
+        // Generar JWT
+        const token = await generarJWT(usuario.id, usuario.name);
+
+        logger.info('Usuario logueado correctamente: ' + usuario.email);
+
+        res.json({
+            ok: true,
+            uid: usuario.id,
+            name: usuario.name,
+            lastname: usuario.lastname,
+            token,
+            msg: 'login exitoso'
+        });
+
+    } catch (error) {
+        logger.error('Error en la función -> login()');
+        logger.error('Error: ' + error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    } finally {
+        logger.info('Fin de la función -> login()')
+    }
 };
 
 
@@ -48,16 +90,16 @@ const createUser = async (req, res = response) => {
         await usuario.save();
 
         // Generar JWT
-        //const token = await generarJWT( usuario.id, usuario.name );
+        const token = await generarJWT(usuario.id, usuario.name);
 
         logger.info('Usuario creado correctamente: ' + usuario);
-        logger.info('Fin de la función -> createUser()')
 
         res.status(201).json({
             ok: true,
             uid: usuario.id,
             name: usuario.name,
-            //token
+            lastname: usuario.lastname,
+            token
         })
 
     } catch (error) {
@@ -67,15 +109,32 @@ const createUser = async (req, res = response) => {
             ok: false,
             msg: 'Por favor hable con el administrador'
         });
+    } finally {
+        logger.info('Fin de la función -> createUser()')
     }
 }
 
 const renewToken = async (req, res = response) => {
     const { uid, name } = req;
-    res.json({
-        ok: true,
-        msg: 'renewToken'
-    });
+    logger.info('Inicio de la función -> renewToken()')
+    try {
+        // Generar un nuevo JWT y retornarlo en la respuesta
+        const token = await generarJWT(uid, name);
+        res.json({
+            ok: true,
+            token
+        });
+    } catch (error) {
+        logger.error('Error en la función -> renewToken()');
+        logger.error('Error: ' + error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+
+    } finally {
+        logger.info('Fin de la función -> renewToken()')
+    }
 }
 
 

@@ -10,6 +10,7 @@ const {
 const router = Router();
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validatos');
+const { validateJWT } = require('../middlewares/validatejwt');
 
 
 // Ruta para autenticación
@@ -39,13 +40,10 @@ router.post(
     createUser
 );
 
-router.post(
+router.get(
     '/renew', 
     [
-        check('email', 'El email es obligatorio').not().isEmpty(),
-        check('email', 'No corresponde a formato de email ').isEmail(),
-        check('password', 'La contraseña es obligatoria').not().isEmpty(),
-        validarCampos
+        validateJWT
     ],
     renewToken
 );
