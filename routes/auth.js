@@ -3,10 +3,7 @@
 */
 
 const { Router } = require('express');
-const {
-    createUser, login,
-    renewToken
-} = require('../controllers/auth');
+const { createUser, login, renewToken } = require('../controllers/auth');
 const router = Router();
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validatos');
@@ -15,7 +12,7 @@ const { validateJWT } = require('../middlewares/validatejwt');
 
 // Ruta para autenticación
 router.post(
-    '/', 
+    '/',
     [
         check('email', 'El email es obligatorio').not().isEmpty(),
         check('email', 'No corresponde a formato de email ').isEmail(),
@@ -41,7 +38,7 @@ router.post(
 );
 
 router.get(
-    '/renew', 
+    '/renew',
     [
         validateJWT
     ],
