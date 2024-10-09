@@ -9,6 +9,7 @@ const {
 } = require('../controllers/auth');
 const router = Router();
 const { check } = require('express-validator');
+const { validarCampos } = require('../middlewares/validatos');
 
 
 // Ruta para autenticación
@@ -16,8 +17,9 @@ router.post(
     '/', 
     [
         check('email', 'El email es obligatorio').not().isEmpty(),
-        check('email', 'El email debe contener @ ').isEmail(),
+        check('email', 'No corresponde a formato de email ').isEmail(),
         check('password', 'La contraseña es obligatoria').not().isEmpty(),
+        validarCampos
     ]
     ,
     login
@@ -28,10 +30,11 @@ router.post(
     [
         check('name', 'El nombre es obligatorio').not().isEmpty(),
         check('email', 'El email es obligatorio').not().isEmpty(),
-        check('email', 'El email debe contener @ ').isEmail(),
+        check('email', 'No corresponde a formato de email ').isEmail(),
         check('password', 'La contraseña es obligatoria').not().isEmpty(),
         check('password', 'La contraseña debe ser de 6 caracteres').isLength({ min: 6 }),
         check('lastname', 'El apellido es obligatorio').not().isEmpty(),
+        validarCampos
     ],
     createUser
 );
@@ -39,7 +42,10 @@ router.post(
 router.post(
     '/renew', 
     [
-        
+        check('email', 'El email es obligatorio').not().isEmpty(),
+        check('email', 'No corresponde a formato de email ').isEmail(),
+        check('password', 'La contraseña es obligatoria').not().isEmpty(),
+        validarCampos
     ],
     renewToken
 );
