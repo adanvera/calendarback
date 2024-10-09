@@ -1,29 +1,15 @@
-const { MongoClient } = require('mongodb');
-require('dotenv').config();
+const mongoose = require('mongoose');
+const logger = require('../helpers/logger');
 
-const MONGO_URI = process.env.MONGO_URI;
-
-const mongoClient = new MongoClient(MONGO_URI, {
-    serverApi:{
-        version: '1',
-        strict: true,
-        deprecationErrors: true
-    }
-});
-
-const dbConnection = async () => {
+const dbConnection = async() => {
     try {
-        await mongoClient.connect();
-        console.log('MongoDB conectada exitosamente');
+        await mongoose.connect( process.env.MONGO_URI );
+        logger.info('Conexión a la base de datos exitosa');
     } catch (error) {
-        console.log(error);
-        throw new Error('Error a la hora de iniciar la base de datos');
-    } 
-    
-    // finally{
-    //     await mongoClient.close();
-    // }
-};
+        logger.error('Error a la hora de inicializar BD: ', error);
+        throw new Error('Error a la hora de inicializar BD');
+    }
+}
 
 module.exports = {
     dbConnection
