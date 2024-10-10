@@ -29,7 +29,6 @@ router.post(
         check('lastname', 'El apellido es obligatorio').not().isEmpty(),
         validarCampos
     ],
-    validateJWT,
     createUser
 );
 
