@@ -5,7 +5,6 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validatos');
 const { validateJWT } = require('../middlewares/validatejwt');
 
-router.use(validateJWT);
 
 // Ruta para autenticación
 router.post(
@@ -18,6 +17,8 @@ router.post(
     ],
     login
 );
+
+router.use(validateJWT);
 
 router.post(
     '/new',
