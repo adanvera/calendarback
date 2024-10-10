@@ -1,7 +1,3 @@
-/* 
-    Rutas de Usuarios / Auth
-*/
-
 const { Router } = require('express');
 const { createUser, login, renewToken } = require('../controllers/auth');
 const router = Router();
@@ -9,6 +5,7 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validatos');
 const { validateJWT } = require('../middlewares/validatejwt');
 
+router.use(validateJWT);
 
 // Ruta para autenticación
 router.post(
@@ -18,8 +15,7 @@ router.post(
         check('email', 'No corresponde a formato de email ').isEmail(),
         check('password', 'La contraseña es obligatoria').not().isEmpty(),
         validarCampos
-    ]
-    ,
+    ],
     login
 );
 
@@ -39,9 +35,6 @@ router.post(
 
 router.get(
     '/renew',
-    [
-        validateJWT
-    ],
     renewToken
 );
 

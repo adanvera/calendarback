@@ -1,11 +1,15 @@
 const winston = require('winston');
+const moment = require('moment-timezone');
 
-// Configura el logger con colores
+// Configura el logger con colores y zona horaria
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(
         winston.format.colorize(), // Añade colores
-        winston.format.timestamp(),
+        winston.format.colorize({all: true }),
+        winston.format.timestamp({
+            format: () => moment().tz('Europe/Madrid').format('YYYY-MM-DD HH:mm:ss')
+        }),
         winston.format.printf(({ timestamp, level, message }) => {
             return `${timestamp} [${level}]: ${message}`; // Formato del mensaje
         })

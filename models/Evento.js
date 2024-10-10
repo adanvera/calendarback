@@ -1,12 +1,13 @@
-const { Schema } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
-const clendarSchema = Schema({
+const eventoSchema = Schema({
+
     title: {
         type: String,
         required: true
     },
     notes: {
-        type: String
+        type: String,        
     },
     start: {
         type: Date,
@@ -21,6 +22,15 @@ const clendarSchema = Schema({
         ref: 'Usuario',
         required: true
     }
+
 });
 
-module.exports = model('Calendar', clendarSchema);
+eventoSchema.method('toJSON', function() {
+    const { __v, _id, ...object } = this.toObject();
+    object.id = _id;
+    return object;
+});
+
+
+
+module.exports = model('Evento', eventoSchema );

@@ -16,7 +16,7 @@ app.use(express.static(__dirname + '/public'));
 
 // Rutas
 app.use('/api/auth', require('./routes/auth'));
-app.use('/api/events', require('./routes/events'));
+app.use('/api/events', require('./routes/evento'));
 
 // Iniciar la conexión a la base de datos y luego escuchar peticiones
 const startServer = async () => {
