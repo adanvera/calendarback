@@ -115,7 +115,7 @@ const createUser = async (req, res = response) => {
 }
 
 const renewToken = async (req, res = response) => {
-    const { uid, name } = req;
+    const { uid, name, lastname } = req;
     logger.info('Inicio de la función -> renewToken()')
     try {
         // Generar un nuevo JWT y retornarlo en la respuesta
