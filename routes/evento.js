@@ -1,6 +1,6 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { createEvent, getEventList, updateEvent } = require('../controllers/evento');
+const { createEvent, getEventList, updateEvent, deleteEvent } = require('../controllers/evento');
 const { validarCampos } = require('../middlewares/validatos');
 const { isDate } = require('../helpers/isDate');
 const { validateJWT } = require('../middlewares/validatejwt');
@@ -33,21 +33,16 @@ router.get('/:id', (req, res) => {
 
 // Actualizar Evento
 router.put(
-    '/:id', 
+    '/:id',
     [
-        check('title','El titulo es obligatorio').not().isEmpty(),
-        check('start','Fecha de inicio es obligatoria').custom( isDate ),
-        check('end','Fecha de finalización es obligatoria').custom( isDate ),
+        check('title', 'El titulo es obligatorio').not().isEmpty(),
+        check('start', 'Fecha de inicio es obligatoria').custom(isDate),
+        check('end', 'Fecha de finalización es obligatoria').custom(isDate),
         validarCampos
     ],
-    updateEvent 
+    updateEvent
 );
 
-router.delete('/:id', (req, res) => {
-    res.json({
-        ok: true,
-        msg: 'deleteEvent'
-    });
-});
+router.delete('/:id', deleteEvent);
 
 module.exports = router;

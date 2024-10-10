@@ -110,8 +110,50 @@ const updateEvent = async (req = request, res = response) => {
     }
 };
 
+const deleteEvent = async(req, res = response) => {
+    logger.info('Inicio de la función -> deleteEvent()')
+    const eventId = req.params.id;
+    try {
+        const event = await Evento.findById(eventId);
+
+        if (!event) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'Evento no encontrado'
+            });
+        } 
+
+        if (event.user.toString() !== req.uid) {
+            return res.status(401).json({
+                ok: false,
+                msg: 'No tiene privilegios para eliminar este evento'
+            });
+        }
+
+        await Evento.findByIdAndDelete(eventId);
+
+        logger.info('Evento id -> ' + eventId + ' eliminado correctamente');
+
+        res.status(200).json({
+            ok: true,
+            msg: 'Evento eliminado correctamente'
+        });
+
+    } catch (error) {
+        logger.error('Error en la función -> deleteEvent()');
+        logger.error('Error: ', error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Por favor hable con el administrador'
+        });
+    }finally{
+        logger.info('Fin de la función -> deleteEvent()')
+    }
+};
+
 module.exports = {
     createEvent,
     getEventList,
-    updateEvent
+    updateEvent,
+    deleteEvent
 }
