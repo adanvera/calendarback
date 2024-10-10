@@ -26,7 +26,7 @@ const validateJWT = (req, res = response, next) => {
         next();
     } catch (error) {
         logger.error('Error en la función -> validateJWT()');
-        logger.error('Error: Token no valido : ' + error);
+        logger.error('Error: Token no valido : ' , error);
         res.status(500).json({
             ok: false,
             msg: 'Token no válido'

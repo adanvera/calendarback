@@ -27,7 +27,7 @@ const startServer = async () => {
             logger.info(`Servidor corriendo en puerto ${PORT}`);
         });
     } catch (error) {
-        console.error('Error al iniciar la aplicación:', error);
+        logger.error('Error al iniciar la aplicación:', error);
     }
 };
 
