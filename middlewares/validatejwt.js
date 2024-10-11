@@ -23,6 +23,7 @@ const validateJWT = (req, res = response, next) => {
         const payload = jwt.verify(token, process.env.SECRET_JWT_SEED);
         req.uid = payload.uid;
         req.name = payload.name;
+        req.lastname = payload.lastname;
         next();
     } catch (error) {
         logger.error('Error en la función -> validateJWT()');
