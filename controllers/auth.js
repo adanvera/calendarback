@@ -12,7 +12,7 @@ const login = async (req, res = response) => {
 
     try {
         let usuario = await Usuario.findOne({ email });
-
+        
         if (!usuario) {
             logger.error(`El usuario con email: ${email} no existe`)
             return res.status(400).json({
@@ -33,7 +33,7 @@ const login = async (req, res = response) => {
         }
 
         // Generar JWT
-        const token = await generarJWT(usuario.id, usuario.name, usuario.lastname);
+        const token = await generarJWT(usuario.id, usuario.name, usuario.lastname, preferences = usuario.preferences);
 
         logger.info('Usuario logueado correctamente: ' + usuario.email);
 
@@ -91,7 +91,7 @@ const createUser = async (req, res = response) => {
         await usuario.save();
 
         // Generar JWT
-        const token = await generarJWT(usuario.id, usuario.name, usuario.lastname);
+        const token = await generarJWT(usuario.id, usuario.name, usuario.lastname , preferences = usuario.preferences);
 
         logger.info('Usuario creado correctamente: ' + usuario);
 
@@ -117,19 +117,18 @@ const createUser = async (req, res = response) => {
 }
 
 const renewToken = async (req, res = response) => {
-    const { uid, name, lastname } = req;
+    const { uid, name, lastname, preferences } = req;
     logger.info('Inicio de la función -> renewToken()')
     logger.info('reqs values -> uid: ' + uid + ' name: ' + name + ' lastname: ' + lastname);
     try {
         // Generar un nuevo JWT y retornarlo en la respuesta
-        const token = await generarJWT(uid, name, lastname);
-        const userPreferences = await Usuario.findById(uid, 'preferences');
+        const token = await generarJWT(uid, name, lastname, preferences);
         res.json({
             ok: true,
             uid,
             name,
             lastname,
-            preferences: userPreferences.preferences,
+            preferences,
             token
         });
     } catch (error) {

@@ -24,6 +24,15 @@ const validateJWT = (req, res = response, next) => {
         req.uid = payload.uid;
         req.name = payload.name;
         req.lastname = payload.lastname;
+        req.preferences = payload.preferences;
+
+
+        console.log('payload: ', payload);
+        console.log('req.uid: ', req.uid);  
+        console.log('req.name: ', req.name);
+        console.log('req.lastname: ', req.lastname);
+        console.log('req.preferences: ', req.preferences);
+
         next();
     } catch (error) {
         logger.error('Error en la función -> validateJWT()');
