@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { createUser, login, renewToken } = require('../controllers/auth');
+const { createUser, login, renewToken, userUpdate } = require('../controllers/auth');
 const router = Router();
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validatos');
@@ -36,6 +36,12 @@ router.get(
     '/renew',
     validateJWT,
     renewToken
+);
+
+router.put(
+    '/update/:id',
+    validateJWT,
+    userUpdate
 );
 
 // Exportar el router

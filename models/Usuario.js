@@ -18,6 +18,14 @@ const usuarioSchema = Schema({
         type: String,
         required: [true, 'La contraseña es obligatoria']
     },
+    preferences: {
+        type: Array,
+        default: [
+            {
+                "color" : "#3498db",
+            }
+        ]
+    }
 });
 
 module.exports = model('Usuario', usuarioSchema);
