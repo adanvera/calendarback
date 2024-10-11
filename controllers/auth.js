@@ -182,7 +182,7 @@ const userUpdate = async (req = request, res = response) => {
         const newValues = {
             ...req.body
         }
-
+        
         usuario = await Usuario.findByIdAndUpdate(uid, newValues, { new: true });
         delete usuario.password;
 
