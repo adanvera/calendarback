@@ -42,6 +42,7 @@ const login = async (req, res = response) => {
             uid: usuario.id,
             name: usuario.name,
             lastname: usuario.lastname,
+            preferences: usuario.preferences,
             token,
             msg: 'login exitoso'
         });
@@ -122,11 +123,13 @@ const renewToken = async (req, res = response) => {
     try {
         // Generar un nuevo JWT y retornarlo en la respuesta
         const token = await generarJWT(uid, name, lastname);
+        const userPreferences = await Usuario.findById(uid, 'preferences');
         res.json({
             ok: true,
             uid,
             name,
             lastname,
+            preferences: userPreferences.preferences,
             token
         });
     } catch (error) {
